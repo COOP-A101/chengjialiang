@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5ecb6adbbbb8814f99b2f616523f9ad, type: 3}
+  m_Name: New Menu
+  m_EditorClassIdentifier: 
+  names:
+  - "\u5C0FQ"
+  - "\u5C0F\u7231"
+  - "\u5C0F\u5F3A"
+  wuqis: 000000000100000002000000
+  scenes:
+  - Game1
+  - Game2
+  - Game3
+  name1: "\u5C0F\u7231"
+  wuqi: 1
+  scene: Game1
