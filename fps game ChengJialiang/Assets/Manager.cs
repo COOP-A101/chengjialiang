@@ -14,7 +14,7 @@ public class Manager : MonoBehaviour
 
     public Menu menu;
 
-    public int minutes = 1;  // 倒计时分钟
+    public int minutes = 3;  // 倒计时分钟
     public int seconds = 0;   // 倒计时秒
     public Text timerText;     // 用于显示倒计时的文本
     public GameObject victoryUI; // 胜利 UI
@@ -62,7 +62,7 @@ public class Manager : MonoBehaviour
         txtBoxNum.text = $"Box：{BoxNum}/{passNum}";
         if (BoxNum >= passNum)
         {
-            HandleTimeUp();
+            HandleVictory();
             BoxNum = 0;
         }
     }
@@ -79,17 +79,16 @@ public class Manager : MonoBehaviour
         isGamePaused = true; // 暂停游戏
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        // 检查失败 UI 是否存在并显示胜利 UI
-        if (gameOverUI.activeSelf == false)
-        {
-            victoryUI.SetActive(true); // 显示胜利 UI
-            timerText.text = "0:00";
-        }
-        else
-        {
-            // 如果失败 UI 存在，可以在这里处理其他逻辑
-            Debug.Log("游戏失败，无法显示胜利 UI");
-        }
+        gameOverUI.SetActive(true); // 显示失败 UI
+        timerText.text = "0:00";
+    }
+
+    public void HandleVictory()
+    {
+        isGamePaused = true; // 暂停游戏
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        victoryUI.SetActive(true); // 显示胜利 UI
     }
 
     public void SwapMonster()
