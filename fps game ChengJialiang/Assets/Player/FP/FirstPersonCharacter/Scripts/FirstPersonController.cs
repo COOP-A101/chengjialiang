@@ -41,6 +41,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+        private bool m_CanDoubleJump;
+        private bool m_HasDoubleJumped;
 
         // Use this for initialization
         private void Start()
@@ -54,6 +56,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_NextStep = m_StepCycle/2f;
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
+            m_CanDoubleJump = false;
+            m_HasDoubleJumped = false;
 			m_MouseLook.Init(transform , m_Camera.transform);
         }
 
@@ -74,10 +78,16 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 PlayLandingSound();
                 m_MoveDir.y = 0f;
                 m_Jumping = false;
+                m_CanDoubleJump = false;
+                m_HasDoubleJumped = false;
             }
             if (!m_CharacterController.isGrounded && !m_Jumping && m_PreviouslyGrounded)
             {
                 m_MoveDir.y = 0f;
+            }
+            if (m_Jumping && !m_HasDoubleJumped)
+            {
+                m_CanDoubleJump = true;
             }
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
@@ -123,7 +133,18 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
             else
             {
-                m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
+                if (m_Jump && m_CanDoubleJump && !m_HasDoubleJumped)
+                {
+                    m_MoveDir.y = m_JumpSpeed;
+                    PlayJumpSound();
+                    m_Jump = false;
+                    m_HasDoubleJumped = true;
+                    m_CanDoubleJump = false;
+                }
+                else
+                {
+                    m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
+                }
             }
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
