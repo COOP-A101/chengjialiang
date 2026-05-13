@@ -11,12 +11,17 @@ public class PlayerWeaponController : MonoBehaviour
     [SerializeField] private GameObject explosionEffect;
     [SerializeField] private float radius = 30f;
     [SerializeField] private GameObject bloodEffect;
+    [SerializeField] private float normalFOV = 60f;
+    [SerializeField] private float zoomedFOV = 30f;
+    [SerializeField] private float zoomSpeed = 10f;
 
     private float range = 100f;
     private int currentActiveIndex = 0;
     private bool reloading;
     private string weaponType;
     private bool weaponDisabled;
+    private Camera mainCamera;
+    private bool isZoomed;
 
     public  Weapon weapon;
     private Animator animator;
@@ -32,6 +37,7 @@ public class PlayerWeaponController : MonoBehaviour
             weapon = weapons[currentActiveIndex];
             animator = weapon.weaponObject.GetComponent<Animator>();
         }
+        mainCamera = fpsCam.GetComponent<Camera>();
     }
 
     void Update()
@@ -45,6 +51,7 @@ public class PlayerWeaponController : MonoBehaviour
         } 
         else
         {
+            HandleZoom();
             HandleShoot();
             HandleWeaponSwitch();
             HandleWeaponActive();
@@ -55,6 +62,24 @@ public class PlayerWeaponController : MonoBehaviour
             }
         }
         text.text = $"{weapon.totalBullet}/{weapon.currentAmmo}";
+    }
+
+    private void HandleZoom()
+    {
+        if (weaponType == "Gun")
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                isZoomed = true;
+            }
+            if (Input.GetMouseButtonUp(1))
+            {
+                isZoomed = false;
+            }
+
+            float targetFOV = isZoomed ? zoomedFOV : normalFOV;
+            mainCamera.fieldOfView = Mathf.Lerp(mainCamera.fieldOfView, targetFOV, Time.deltaTime * zoomSpeed);
+        }
     }
 
     private void HandleWeaponSwitch()
